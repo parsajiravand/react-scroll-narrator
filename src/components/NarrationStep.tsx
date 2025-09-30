@@ -89,7 +89,7 @@ const NarrationStep = forwardRef<HTMLDivElement, ExtendedNarrationStepProps>(({
       )}
       style={stepStyle}
       initial="initial"
-      animate={isVisible ? "animate" : "exit"}
+      animate={(isVisible || isActive) ? "animate" : "exit"}
       variants={variants}
       transition={{
         duration: 0.6,
