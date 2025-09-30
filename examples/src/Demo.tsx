@@ -24,7 +24,7 @@ export const Demo: React.FC = () => {
         current={currentStep}
         style="dots"
         position="right"
-        size="lg"
+        size="md"
         className="z-[100]"
         onStepClick={handleStepClick}
       />

@@ -17,12 +17,44 @@ export const useScrollNarrator = ({
   containerRef,
   onStepChange,
   totalSteps,
-  threshold = 0.5,
-  rootMargin = '-50% 0px -50% 0px',
+  threshold = 0.1,
+  rootMargin = '0px 0px -10% 0px',
 }: UseScrollNarratorOptions): UseScrollNarratorReturn => {
   const observerRef = useRef<IntersectionObserver | null>(null)
   const stepRefs = useRef<(HTMLElement | null)[]>([])
   const currentStepRef = useRef<number>(0)
+
+  // Calculate which step is currently most visible in the viewport
+  const updateCurrentStepFromScroll = useCallback(() => {
+    const scrollY = window.scrollY
+    const windowHeight = window.innerHeight
+
+    let maxVisibleArea = 0
+    let currentStep = 0
+
+    stepRefs.current.forEach((stepRef, index) => {
+      if (stepRef) {
+        const rect = stepRef.getBoundingClientRect()
+        const elementTop = rect.top + scrollY
+        const elementBottom = rect.bottom + scrollY
+
+        // Calculate visible area of this element
+        const visibleTop = Math.max(scrollY, elementTop)
+        const visibleBottom = Math.min(scrollY + windowHeight, elementBottom)
+        const visibleArea = Math.max(0, visibleBottom - visibleTop)
+
+        if (visibleArea > maxVisibleArea) {
+          maxVisibleArea = visibleArea
+          currentStep = index
+        }
+      }
+    })
+
+    if (currentStep !== currentStepRef.current) {
+      currentStepRef.current = currentStep
+      onStepChange(currentStep, `step-${currentStep}`)
+    }
+  }, [onStepChange])
 
   // Create refs for each step
   const observerRefs: RefCallback<HTMLElement>[] = []
@@ -54,9 +86,9 @@ export const useScrollNarrator = ({
     const container = containerRef.current
     if (!container) return
 
-    // Create IntersectionObserver
+    // Create IntersectionObserver as backup
     observerRef.current = new IntersectionObserver(handleIntersection, {
-      root: container,
+      root: null, // Use viewport as root since we scroll the window
       rootMargin,
       threshold,
     })
@@ -69,12 +101,23 @@ export const useScrollNarrator = ({
       }
     })
 
+    // Add scroll listener as primary method
+    const handleScroll = () => {
+      updateCurrentStepFromScroll()
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+
+    // Initial check
+    updateCurrentStepFromScroll()
+
     return () => {
       if (observerRef.current) {
         observerRef.current.disconnect()
       }
+      window.removeEventListener('scroll', handleScroll)
     }
-  }, [containerRef, handleIntersection, rootMargin, threshold])
+  }, [containerRef, handleIntersection, updateCurrentStepFromScroll, rootMargin, threshold])
 
   return {
     observerRefs,
