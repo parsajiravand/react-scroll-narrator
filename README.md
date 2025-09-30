@@ -8,17 +8,26 @@ A powerful React component for creating Apple-style scroll-driven storytelling e
 
 ![React Scroll Narrator Demo](./demo-preview.png)
 
+## 🚀 What's New
+
+- **Programmatic Navigation**: Direct API access with `scrollToStep()` method
+- **Enhanced Progress Indicators**: Click to navigate functionality
+- **Improved Performance**: Dual detection system with scroll listeners and IntersectionObserver
+- **Better Animation Triggers**: Content appears immediately when sections become active
+- **Full Viewport Sections**: Each NarrationStep takes full screen height (100vh)
+
 ## ✨ Features
 
 - **🎭 Multiple Animation Types**: Fade, slide, scale, reveal, parallax, and custom animations
 - **📱 Touch & Mobile Optimized**: Swipe gestures and touch navigation
 - **⌨️ Keyboard Navigation**: Full keyboard support with arrow keys and number shortcuts
 - **🎨 Parallax Backgrounds**: Smooth parallax scrolling effects
-- **📍 Progress Indicators**: Dots, bars, and minimal progress displays
+- **📍 Progress Indicators**: Interactive dots, bars, and minimal progress displays with click navigation
 - **♿ Accessibility Ready**: Screen reader support and ARIA attributes
-- **⚡ High Performance**: Optimized with IntersectionObserver API
+- **⚡ High Performance**: Optimized with IntersectionObserver API and scroll-based detection
 - **🔧 Fully Customizable**: Extensive props for styling and behavior
 - **🎯 TypeScript Support**: Complete type definitions included
+- **🎪 Programmatic Control**: Direct API access for custom navigation and control
 
 ## 🚀 Installation
 
@@ -35,35 +44,56 @@ npm install react react-dom framer-motion clsx
 ## 📖 Quick Start
 
 ```tsx
-import { ScrollNarrator, NarrationStep } from "react-scroll-narrator";
+import { ScrollNarrator, NarrationStep, ProgressIndicator, ScrollNarratorRef } from "react-scroll-narrator";
+import { useState, useRef } from "react";
 
 export default function MyApp() {
+  const [currentStep, setCurrentStep] = useState(0);
+  const scrollNarratorRef = useRef<ScrollNarratorRef>(null);
+
+  const handleStepClick = (stepIndex) => {
+    scrollNarratorRef.current?.scrollToStep(stepIndex);
+  };
+
   return (
-    <ScrollNarrator
-      height="100vh"
-      animation="fade"
-      onStepChange={(index) => console.log("Current step:", index)}
-    >
-      <NarrationStep>
-        <h1>Welcome to Scroll Narrator! 🚀</h1>
-        <p>Your scroll-driven storytelling starts here.</p>
-      </NarrationStep>
+    <div className="relative">
+      {/* Progress Indicator */}
+      <ProgressIndicator
+        total={3}
+        current={currentStep}
+        style="dots"
+        position="right"
+        onStepClick={handleStepClick}
+      />
 
-      <NarrationStep animation="slideUp">
-        <div className="product-showcase">
-          <img src="/product.png" alt="Amazing Product" />
-          <h2>Incredible Features</h2>
-          <p>Experience the magic of smooth scroll animations.</p>
-        </div>
-      </NarrationStep>
+      <ScrollNarrator
+        ref={scrollNarratorRef}
+        animation="fade"
+        onStepChange={setCurrentStep}
+        keyboardNavigation={true}
+        touchNavigation={true}
+      >
+        <NarrationStep>
+          <h1>Welcome to Scroll Narrator! 🚀</h1>
+          <p>Your scroll-driven storytelling starts here.</p>
+        </NarrationStep>
 
-      <NarrationStep animation="scale">
-        <div className="cta-section">
-          <h2>Get Started Today</h2>
-          <button>Learn More</button>
-        </div>
-      </NarrationStep>
-    </ScrollNarrator>
+        <NarrationStep animation="slideUp">
+          <div className="product-showcase">
+            <img src="/product.png" alt="Amazing Product" />
+            <h2>Incredible Features</h2>
+            <p>Experience the magic of smooth scroll animations.</p>
+          </div>
+        </NarrationStep>
+
+        <NarrationStep animation="reveal">
+          <div className="cta-section">
+            <h2>Get Started Today</h2>
+            <button>Learn More</button>
+          </div>
+        </NarrationStep>
+      </ScrollNarrator>
+    </div>
   );
 }
 ```
@@ -75,8 +105,13 @@ export default function MyApp() {
 The main container component that manages scroll behavior and step transitions.
 
 ```tsx
+const scrollNarratorRef = useRef<ScrollNarratorRef>(null);
+
+// Programmatic navigation
+scrollNarratorRef.current?.scrollToStep(2);
+
 <ScrollNarrator
-  height="100vh"
+  ref={scrollNarratorRef}
   animation="fade"
   onStepChange={(index) => console.log(index)}
   keyboardNavigation={true}
@@ -93,7 +128,6 @@ The main container component that manages scroll behavior and step transitions.
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `height` | `string \| number` | `"100vh"` | Height of each step section |
 | `animation` | `AnimationType` | `"fade"` | Default animation for all steps |
 | `onStepChange` | `(index: number, stepId?: string) => void` | - | Callback when step becomes active |
 | `sticky` | `boolean` | `true` | Whether steps are sticky scroll |
@@ -103,6 +137,24 @@ The main container component that manages scroll behavior and step transitions.
 | `touchNavigation` | `boolean` | `true` | Enable touch/swipe navigation |
 | `className` | `string` | - | Custom CSS class |
 | `style` | `CSSProperties` | - | Custom inline styles |
+
+#### Ref Methods
+
+| Method | Signature | Description |
+|--------|-----------|-------------|
+| `scrollToStep` | `(stepIndex: number) => void` | Programmatically scroll to a specific step |
+
+#### TypeScript Types
+
+```tsx
+import type {
+  ScrollNarratorProps,
+  NarrationStepProps,
+  AnimationType,
+  ProgressIndicatorProps,
+  ScrollNarratorRef
+} from "react-scroll-narrator";
+```
 
 ### NarrationStep
 
@@ -181,39 +233,50 @@ Choose from these built-in animation types:
 ### With Progress Indicator
 
 ```tsx
-import { ScrollNarrator, NarrationStep, ProgressIndicator } from "react-scroll-narrator";
-import { useState } from "react";
+import { ScrollNarrator, NarrationStep, ProgressIndicator, ScrollNarratorRef } from "react-scroll-narrator";
+import { useState, useRef } from "react";
 
 function App() {
   const [currentStep, setCurrentStep] = useState(0);
+  const scrollNarratorRef = useRef<ScrollNarratorRef>(null);
+
+  const handleStepClick = (stepIndex: number) => {
+    scrollNarratorRef.current?.scrollToStep(stepIndex);
+  };
 
   return (
-    <>
+    <div className="relative">
       <ProgressIndicator
         total={3}
         current={currentStep}
         style="dots"
         position="right"
-        onStepClick={setCurrentStep}
+        onStepClick={handleStepClick}
+        size="lg"
       />
 
       <ScrollNarrator
-        height="100vh"
+        ref={scrollNarratorRef}
         onStepChange={setCurrentStep}
+        keyboardNavigation={true}
+        touchNavigation={true}
       >
         <NarrationStep>
           <h1>Step 1</h1>
+          <p>Scroll or click the dots to navigate</p>
         </NarrationStep>
 
-        <NarrationStep>
+        <NarrationStep animation="slideUp">
           <h1>Step 2</h1>
+          <p>Smooth animations and interactions</p>
         </NarrationStep>
 
-        <NarrationStep>
+        <NarrationStep animation="reveal">
           <h1>Step 3</h1>
+          <p>Beautiful storytelling experiences</p>
         </NarrationStep>
       </ScrollNarrator>
-    </>
+    </div>
   );
 }
 ```
@@ -312,6 +375,8 @@ import type {
 - Firefox 55+
 - Safari 11+
 - Edge 79+
+- iOS Safari 11+
+- Android Chrome 58+
 
 ## 🤝 Contributing
 

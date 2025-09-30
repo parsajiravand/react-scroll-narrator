@@ -1,6 +1,12 @@
 {
   "name": "react-scroll-narrator",
-  "version": "1.0.0",
+  "version": "1.1.0",
+  "homepage": "https://github.com/parsajiravand/react-scroll-narrator",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/parsajiravand/react-scroll-narrator.git"
+  },
+  "author": "Parsa Jiravand",
   "description": "A React component for creating scroll-driven storytelling UIs with smooth animations, inspired by Apple product pages",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -28,10 +34,30 @@
     "animation",
     "apple-style",
     "intersection-observer",
-    "framer-motion"
+    "framer-motion",
+    "react-component",
+    "scroll-based-ui",
+    "scroll-narrator",
+    "scroll-narrative",
+    "scroll-narrative-ui",
+    "scroll-narrative-animation",
+    "scroll-narrative-component",
+    "scroll-narrative-react-component",
+    "scroll-narrative-animation",
+    "scroll-narrative-component",
+    "scroll-narrative-react-component",
+    "scroll-narrative-ui",
+    "scroll-narrative-animation",
+    "scroll-narrative-component",
+    "scroll-narrative-react-component",
+  "animation",
+  "narrator",
+  "storytelling",
+  "scroll-based-ui",
+  "framer-motion",
+  "react-component"
+
   ],
-  "author": "Your Name",
-  "license": "MIT",
   "peerDependencies": {
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
