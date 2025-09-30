@@ -5,9 +5,9 @@ import { NarrationStepProps, AnimationType } from '../types'
 import { getAnimationVariants } from '../utils/animations'
 
 interface ExtendedNarrationStepProps extends NarrationStepProps {
-  index: number
-  isActive: boolean
-  animation: AnimationType
+  index?: number
+  isActive?: boolean
+  animation?: AnimationType
   parallax?: boolean
   parallaxY?: any
   observerRef?: (element: HTMLElement | null) => void
@@ -16,7 +16,7 @@ interface ExtendedNarrationStepProps extends NarrationStepProps {
 const NarrationStep = forwardRef<HTMLDivElement, ExtendedNarrationStepProps>(({
   index,
   isActive,
-  animation,
+  animation = 'fade',
   parallax = false,
   parallaxY,
   observerRef,
@@ -83,7 +83,7 @@ const NarrationStep = forwardRef<HTMLDivElement, ExtendedNarrationStepProps>(({
       ref={combinedRef}
       className={clsx(
         'narration-step',
-        'relative w-full h-full flex items-center justify-center',
+        'relative w-full h-screen flex items-center justify-center',
         'overflow-hidden',
         className
       )}

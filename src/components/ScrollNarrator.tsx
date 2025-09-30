@@ -1,13 +1,12 @@
-import React, { useRef, useState, useCallback } from 'react'
+import React, { useRef, useState, useCallback, forwardRef, useImperativeHandle } from 'react'
 import { useScroll, useTransform } from 'framer-motion'
 import clsx from 'clsx'
-import { ScrollNarratorProps, ScrollState } from '../types'
+import { ScrollNarratorProps, ScrollState, ScrollNarratorRef } from '../types'
 import { useScrollNarrator } from '../hooks/useScrollNarrator'
 import { useKeyboardNavigation } from '../hooks/useKeyboardNavigation'
 import { useTouchNavigation } from '../hooks/useTouchNavigation'
 
-const ScrollNarrator: React.FC<ScrollNarratorProps> = ({
-  height = '100vh',
+const ScrollNarrator = forwardRef<ScrollNarratorRef, ScrollNarratorProps>(({
   animation = 'fade',
   onStepChange,
   sticky = true,
@@ -18,7 +17,7 @@ const ScrollNarrator: React.FC<ScrollNarratorProps> = ({
   className,
   style,
   children,
-}) => {
+}, ref) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const [scrollState, setScrollState] = useState<ScrollState>({
     currentStep: 0,
@@ -41,6 +40,24 @@ const ScrollNarrator: React.FC<ScrollNarratorProps> = ({
     }))
     onStepChange?.(stepIndex, stepId)
   }, [onStepChange])
+
+  const scrollToStep = useCallback((stepIndex: number) => {
+    // Scroll the window/document instead of the container
+    const stepHeight = window.innerHeight
+    const scrollPosition = stepIndex * stepHeight
+
+    window.scrollTo({
+      top: scrollPosition,
+      behavior: 'smooth'
+    })
+
+    // Also update the state immediately for responsive UI
+    handleStepChange(stepIndex)
+  }, [handleStepChange])
+
+  useImperativeHandle(ref, () => ({
+    scrollToStep,
+  }), [scrollToStep])
 
   const { observerRefs } = useScrollNarrator({
     containerRef,
@@ -66,7 +83,6 @@ const ScrollNarrator: React.FC<ScrollNarratorProps> = ({
   })
 
   const containerStyle: React.CSSProperties = {
-    height: typeof height === 'number' ? `${height}px` : height,
     ...style,
   }
 
@@ -98,6 +114,8 @@ const ScrollNarrator: React.FC<ScrollNarratorProps> = ({
       })}
     </div>
   )
-}
+})
+
+ScrollNarrator.displayName = 'ScrollNarrator'
 
 export default ScrollNarrator

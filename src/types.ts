@@ -22,6 +22,8 @@ export interface ScrollNarratorProps {
   animation?: AnimationType
   /** Callback when step becomes active */
   onStepChange?: (index: number, stepId?: string) => void
+  /** Callback when user clicks on progress indicator */
+  onStepClick?: (stepIndex: number) => void
   /** Whether steps are sticky scroll */
   sticky?: boolean
   /** Enable parallax backgrounds */
@@ -88,4 +90,8 @@ export interface AnimationVariants {
   animate: Record<string, any>
   exit: Record<string, any>
   [key: string]: Record<string, any>
+}
+
+export interface ScrollNarratorRef {
+  scrollToStep: (stepIndex: number) => void
 }

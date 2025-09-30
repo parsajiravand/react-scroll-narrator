@@ -1,13 +1,19 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { motion } from 'framer-motion'
-import { ScrollNarrator, NarrationStep, ProgressIndicator } from '../../src'
+import { ScrollNarrator, NarrationStep, ProgressIndicator, ScrollNarratorRef } from '../../src'
 import { staggerContainer, staggerItem, appleEasing } from '../../src/utils/animations'
 
 export const Demo: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0)
+  const scrollNarratorRef = useRef<ScrollNarratorRef>(null)
+
 
   const handleStepChange = (step: number) => {
     setCurrentStep(step)
+  }
+
+  const handleStepClick = (stepIndex: number) => {
+    scrollNarratorRef.current?.scrollToStep(stepIndex)
   }
 
   return (
@@ -19,17 +25,19 @@ export const Demo: React.FC = () => {
         style="dots"
         position="right"
         size="lg"
-        className="z-50"
+        className="z-[100]"
+        onStepClick={handleStepClick}
       />
 
       <ScrollNarrator
-        height="100vh"
+        ref={scrollNarratorRef}
         animation="fade"
         onStepChange={handleStepChange}
         keyboardNavigation={true}
         touchNavigation={true}
         parallax={true}
         parallaxSpeed={0.3}
+        sticky={false}
         className="scroll-narrator-container"
       >
         {/* Hero Section */}
