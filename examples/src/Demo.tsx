@@ -336,12 +336,15 @@ export default function MyApp() {
                 className="glass px-12 py-5 rounded-full text-xl font-semibold hover:bg-white/20 transition-all duration-300"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={() => {
+                  window.open('https://www.npmjs.com/package/react-scroll-narrator', '_blank')
+                }}
               >
                 npm install react-scroll-narrator
               </motion.button>
 
               <motion.a
-                href="https://github.com/yourusername/react-scroll-narrator"
+                href="https://github.com/parsajiravand/react-scroll-narrator"
                 className="px-12 py-5 rounded-full text-xl font-semibold border border-white/30 hover:bg-white/10 transition-all duration-300"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
