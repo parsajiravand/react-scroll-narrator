@@ -359,8 +359,19 @@ export default function MyApp() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
             >
-              <p className="text-sm">
+              <p className="text-sm mb-2">
                 Made with ❤️ for modern web experiences
+              </p>
+              <p className="text-sm">
+                <a href="https://www.npmjs.com/package/react-scroll-narrator" target="_blank" rel="noopener noreferrer">
+                  npm install react-scroll-narrator
+                </a>
+              </p>
+              {/* author */}
+              <p className="text-sm">
+                <a href="https://www.linkedin.com/in/parsa-jiravand/" target="_blank" rel="noopener noreferrer">
+                  Author: Parsa Jiravand
+                </a>
               </p>
             </motion.div>
           </motion.div>

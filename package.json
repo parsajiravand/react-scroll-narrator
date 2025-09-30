@@ -1,7 +1,7 @@
 {
   "name": "react-scroll-narrator",
-  "version": "1.0.0",
-  "homepage": "https://github.com/parsajiravand/react-scroll-narrator",
+  "version": "1.0.1",
+  "homepage": "https://react-scroll-narrator.netlify.app",
   "repository": {
     "type": "git",
     "url": "https://github.com/parsajiravand/react-scroll-narrator.git"

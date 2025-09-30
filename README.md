@@ -6,7 +6,7 @@
 
 A powerful React component for creating Apple-style scroll-driven storytelling experiences with smooth animations, parallax effects, and interactive navigation.
 
-![React Scroll Narrator Demo](./demo-preview.png)
+![React Scroll Narrator Demo](https://react-scroll-narrator.netlify.app/)
 
 ## 🚀 What's New
 
