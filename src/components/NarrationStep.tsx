@@ -27,6 +27,7 @@ const NarrationStep = forwardRef<HTMLDivElement, ExtendedNarrationStepProps>(({
   children,
   ...props
 }, ref) => {
+  const [isVisible, setIsVisible] = React.useState(false)
   const stepRef = useRef<HTMLDivElement | null>(null)
 
   const combinedRef = (element: HTMLDivElement | null) => {
@@ -42,6 +43,25 @@ const NarrationStep = forwardRef<HTMLDivElement, ExtendedNarrationStepProps>(({
     }
     stepRef.current = element
   }
+
+  // Viewport visibility observer for animations
+  React.useEffect(() => {
+    const element = stepRef.current
+    if (!element) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting)
+      },
+      {
+        threshold: 0.1, // Trigger when 10% visible
+        rootMargin: '0px 0px -10% 0px' // Trigger slightly before fully out of view
+      }
+    )
+
+    observer.observe(element)
+    return () => observer.disconnect()
+  }, [])
 
   const variants = getAnimationVariants(animation)
 
@@ -69,7 +89,7 @@ const NarrationStep = forwardRef<HTMLDivElement, ExtendedNarrationStepProps>(({
       )}
       style={stepStyle}
       initial="initial"
-      animate={isActive ? "animate" : "exit"}
+      animate={isVisible ? "animate" : "exit"}
       variants={variants}
       transition={{
         duration: 0.6,
